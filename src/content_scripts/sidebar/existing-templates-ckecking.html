@@ -1,0 +1,31 @@
+<div ng-controller="ExistingServiceController">
+	<div class="panel-heading navbar-fixed-top">
+	   <div class="panel-title text-center">
+	   		<h2 class="title" i18n-data="welcome"></h2>
+	   	</div>
+	</div>
+	<div class="container" >
+	    <form class="sidebar-form">
+			<div class="well">
+				<span type="button" class="close" data-dismiss="alert">
+					<span class="glyphicon glyphicon-info-sign"></span>
+				</span>
+				<span id="welcome_instructions"></span>
+			</div>
+	        <!-- :::::::::: INPUT :::::::::: -->
+	        <div id="existing_services" class="list-group"></div>
+		    <nav>
+		        <ul class="pager">
+		            <li class="next active pull-right">
+		                <button id="save-result" type="button" class="btn btn-primary" ng-click="loadNextStep('ServiceName')"> <!-- ResultsProperties ServiceName -->
+		                    <span i18n-data="new_template"></span>
+		                    <span class="glyphicon glyphicon-plus"></span>
+		                </button>
+		            </li>
+		        </ul>
+		    </nav>
+
+            <div id="existing_products" class="list-group"></div>
+	    </form>
+	</div>
+</div>

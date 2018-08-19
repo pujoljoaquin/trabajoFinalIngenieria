@@ -1,0 +1,111 @@
+{
+  "save":{
+    "message": "Save"
+  },
+  "templates_repo_uri":{
+    "message": "URI of the templates' repo"
+  },
+  "next":{
+    "message": "Next"
+  },
+  "back":{
+    "message": "Back"
+  },
+
+
+  "welcome":{
+    "message": "Welcome"
+  },
+  "matching_annotations_instructions":{
+    "message": "The following templates have been defined for this page. You can edit an existing one or create a new one."
+  },
+  "no_matching_annotations_instructions":{
+    "message": "There are no elements already annotated in this page. Please, create a new template by annotating this document."
+  },
+  "new_template":{
+    "message": "New template"
+  },
+
+  
+  "template_name":{
+    "message": "Template name"
+  },
+  "template_tag":{
+    "message": "Template tag"
+  },
+  "example_template_tag":{
+    "message": "e.g. book, trailer"
+  },
+  "example_acronym":{
+    "message": "e.g. Amazon Books, Youtube Trailer, etc."
+  },
+  "name_the_template":{
+    "message": "Please, name the concept you want to annotate in this page with a domain-specific concept. Then, choose a tag for it."
+  },
+  "service_name_already_exists":{
+    "message": "This name is already taken by another service"
+  },
+
+
+  "preview": {
+    "message": "Preview"
+  },
+  "results_title": {
+    "message": "Choosing the elements"
+  },
+  "results_selection_instructions": {
+    "message": "Please, click on the «main page element» which contains all the properties of the concept you are interested to annotate. Finally, choose the number of occurrences of the concept."
+  },
+  "results_occurrences": {
+    "message": "Number of occurrences"
+  },
+  "occurrences": {
+    "message": "occurrences"
+  },
+  "occurrence": {
+    "message": "occurrence"
+  },
+
+
+  "results_properties_title": {
+    "message": "Template's properties"
+  },
+  "results_properties_instructions": {
+    "message": "Click on each of the properties you want to be considered for your template, and give them a name."
+  },
+  "property_name": {
+    "message": "Property name"
+  },
+  "example_value": {
+    "message": "Example value"
+  },
+  "this_field_is_required": {
+    "message": "This field is required"
+  },
+  "props_are_required": {
+    "message": "It is mandatory to define at least one property, since it is the information that will be retrieved when you use the template for harvesting the concrete information in the page."
+  },
+  "no_results_found": {
+    "message": "No results found for the specified selection"
+  },
+
+
+
+  "singleMatch":{
+    "message": "match"
+  },
+  "multipleMatches":{
+    "message": "matches"
+  },
+
+
+  "end_of_process":{
+    "message": "End of process"
+  },
+  "end_of_process_message":{
+    "message": "You just created the template <br> <br> Now you can use it by navigating similar structured pages on this site and pressing the «harvesting» button. <br> <br> You can also edit this template by opening this sidebar when you are browsing this page."
+  },
+  "finish":{
+    "message": "Finish"
+  }
+}

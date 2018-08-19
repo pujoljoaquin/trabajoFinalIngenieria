@@ -1,0 +1,48 @@
+<div ng-controller="ResultsSelectionController">
+	<div class="panel-heading navbar-fixed-top">
+		<div class="panel-title text-center">
+		  <h2 class="title" i18n-data="results_title"></h2>
+		</div>
+	</div> 
+
+	<div class="container">    
+		<form class="sidebar-form">     
+			<div class="well">
+				<span type="button" class="close" data-dismiss="alert">
+				<span class="glyphicon glyphicon-info-sign"></span>
+				</span>
+				<span i18n-data="results_selection_instructions"></span>
+			</div>
+			
+            <!-- :::::::::: XPATH :::::::::: --> 
+            <div id="selector_group" class="form-group hidden" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
+                <label for="result-selector" i18n-data="results_occurrences"></label>
+                <select id="result-selector" class="form-control">
+                </select>
+            </div>
+            <!-- :::::::::: PREVIEW :::::::::: 
+            <div id="preview_group" class="form-group hidden" ng-class="(service.results.selector == undefined)? 'hidden' : ''">
+                <label for="preview-of-result" i18n-data="preview"></label>
+                <div id="preview-of-result" class="image-preview-container preview-container">
+                    <img id="result-preview-image" class="image-preview" ng-src="{{service.results.preview}}"/> 
+                </div>
+            </div> -->
+			<nav > 
+			  <ul class="pager">
+			    	<li class="prev active pull-left">
+						<button type="button" class="btn btn-primary" ng-click="loadPrevStep('ServiceName')">
+							<span class="glyphicon glyphicon-triangle-left"></span>
+						  	<span i18n-data="back">Back</span>
+						</button>
+					</li>
+			      	<li class="next active pull-right">
+			          	<button type="button" class="btn btn-primary" ng-click="loadNextStep('ResultsProperties')">
+			              	<span i18n-data="next">Next</span>
+			              	<span class="glyphicon glyphicon-triangle-right"></span>
+			          	</button>
+			      	</li>
+			  </ul>
+			</nav> 
+        </form>
+    </div>
+</div>

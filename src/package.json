@@ -1,0 +1,30 @@
+{
+  "name": "andes",
+  "repository": "https://bitbucket.org/gabybosetti/web-ancillary-search",
+  "version": "1.0.0",
+  "description": "ANDES",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "LIFIA",
+  "license": "MIT",
+  "dependencies": {
+    "angular": "1.6.6",
+    "angular-ui-router": "https://github.com/angular-ui/ui-router/archive/0.2.18.tar.gz",
+    "bootstrap": "^3.3.7",
+    "bootstrap-toggle": "^2.2.2",
+    "bootstrap-tokenfield": "^0.12.0",
+    "bootswatch": "3.3.7",
+    "bower": "^1.8.2",
+    "css-toggle-switch": "4.0.2",
+    "datatables.net": "^1.10.16",
+    "datatables.net-dt": "^1.10.16",
+    "datatables.net-responsive": "^2.0.2",
+    "dom-to-image": "2.6.0",
+    "jquery": "3.2.1",
+    "jquery-ui-dist": "^1.12.1",
+    "jquery-validation": "1.17.0",
+    "popper.js": "^1.11.0",
+    "webextension-polyfill": "^0.2.1"
+  }
+}

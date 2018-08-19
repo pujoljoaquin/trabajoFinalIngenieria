@@ -1,0 +1,78 @@
+{
+  "manifest_version": 2,
+  "name": "Logikós templates creator",
+  "version": "1.0",
+  "description": "...",
+  "homepage_url": "https://sites.google.com/view/logikos/accueil",
+  "default_locale": "en",
+
+  "browser_action": { //Note that your extension can have only one browser action
+    "default_icon": {
+      "64": "resources/img/logo-disabled-64.png"
+    },
+    "default_title": "Logikós templates creator",
+    "browser_style": true
+  },
+
+  "background": {
+    "scripts": [
+      "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+      "shared_scripts/storage_module.js",
+      "config/checkDefaultConfig.js", 
+      "content_scripts/XPathInterpreter.js",
+      "background/BrowserUiManager.js",
+      "background/SidebarManager.js",
+      "background/BackgroundPageSelector.js",
+      "background/TemplatesCreator.js",
+      "background/main.js"
+    ]
+  },
+
+  "content_scripts": [{
+      "matches": ["*://*/*"],
+      "js": [
+        "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+        "shared_scripts/storage_module.js",
+        "node_modules/dom-to-image/dist/dom-to-image.min.js",
+        "content_scripts/XPathInterpreter.js",
+        "node_modules/popper.js/dist/umd/popper.js",
+        "content_scripts/page-actions/PageSelector.js",
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/jquery-ui-dist/jquery-ui.min.js",
+        "content_scripts/sidebar/Sidebar.js"
+      ],
+      "css": [
+        "content_scripts/page-actions/andes-highlighting.css"
+      ]
+    },
+    {
+      "matches": ["*://*/*"],
+      "js": [
+        "node_modules/webextension-polyfill/dist/browser-polyfill.js",
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/jquery-ui-dist/jquery-ui.min.js",
+        "content_scripts/XPathInterpreter.js"
+      ],
+      "all_frames": true
+    }
+  ],
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "<all_urls>",
+    "contextMenus",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+
+  "web_accessible_resources": [
+    "/content_scripts/*"
+  ],
+
+  "options_ui": {
+    "page": "/config/options.html",
+    "open_in_tab": false
+  }
+}
