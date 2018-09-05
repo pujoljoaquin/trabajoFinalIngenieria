@@ -1,4 +1,4 @@
-serviceCreator.controller('ResultsPropertiesController', function($scope, $http, $q, $state, ServiceService) {
+serviceCreator.controller('SelectProductPropertiesController', function($scope, $state, ServiceService) {
 
   AbstractController.call(this, $scope, $state, ServiceService);
   $scope.service = {
@@ -85,6 +85,8 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
   };
 
   $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
+    console.log("$scope.onElementSelection");
+
     var prop = {
       "name": "",
       "exampleValue": data.exampleValue.length > 35
@@ -119,31 +121,12 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
     console.log(model);
     var nameAbstractModel = ServiceService.getObjectModel();
     var obj = {
-        class: nameAbstractModel,
-        fields: []
+        name: nameAbstractModel,
+        atributos: []
     };
-    var objInstanciado = {
-        "name": model.name.exampleValue,
-        "description": model.description.exampleValue
-    };
-    var atr = {
-        "name": '',
-        "type": "string",
-        "unique": "false",
-        "nullable": "false"
-    }
-    console.log("OBJETO ISNTANCIADO");
-    console.log(objInstanciado);
     angular.forEach(model, function(value, key) {
-        console.log(key);
-        console.log(value);
-        atr = {
-            "name": value.name,
-            "type": "string",
-            "unique": "false",
-            "nullable": "false"
-        };
-        obj.fields.push(atr);
+        console.log(key + ': ' + value);
+        obj.atributos.push(value.name);
         //angular.forEach(value, function(atrValue, atr) {
         //    console.log(atr + ': ' + atrValue);
         //});
@@ -152,10 +135,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
     ServiceService.sendModel(obj).then(function() {
         console.log("SE ENVIO AL SERVICIO EL MODELO ABSTRACTO OBTENIDO");
     });
-    ServiceService.sendObject(objInstanciado).then(function() {
-        console.log("Objeto instanciado enviado");
-    });
-
     };
 
   $scope.getUserEditedProperties = function() {

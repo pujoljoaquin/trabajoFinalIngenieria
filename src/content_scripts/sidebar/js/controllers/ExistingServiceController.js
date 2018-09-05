@@ -140,9 +140,9 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
     addButton.className = "btn btn-default btn-list";
     addButton.innerHTML = "<i class='glyphicon glyphicon-plus'></i>";
     addButton.onclick = function(evt) {
-      evt.preventDefault();
-      evt.stopImmediatePropagation();
-
+      //evt.preventDefault();
+      //evt.stopImmediatePropagation();
+      $scope.loadNextStep('SelectProductProperties');
       //const control = this;
       //const iframe = document.createElement("iframe");
       //iframe.src = "http://216.250.114.200";
@@ -150,9 +150,18 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
       //  control.parentElement.remove();
       //});
     };
+    const iframe = document.createElement('iframe');
+    // Must be declared at web_accessible_resources in manifest.json
+//    iframe.src = "https://www.google.com";
+
+    // Some styles for a fancy sidebar
+    //iframe.style.cssText = 'position:fixed;top:0;left:0;display:block;' + 'width:300px;height:100%;z-index:1000;';
+    //document.body.appendChild(iframe);
 
     listItem.appendChild(removeButton);
     listItem.appendChild(addButton);
+  //  listItem.appendChild(iframe);
+
  //   listItem.appendChild(iframe);
 
     document.querySelector("#existing_products").appendChild(listItem);

@@ -18,7 +18,7 @@
     "scripts": [
       "node_modules/webextension-polyfill/dist/browser-polyfill.js",
       "shared_scripts/storage_module.js",
-      "config/checkDefaultConfig.js", 
+      "config/checkDefaultConfig.js",
       "content_scripts/XPathInterpreter.js",
       "background/BrowserUiManager.js",
       "background/SidebarManager.js",
@@ -64,7 +64,11 @@
     "<all_urls>",
     "contextMenus",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "http://localhost:3000/render/insertOneInProduct",
+    "https://localhost:3000/createEntity",
+    "http://localhost:3000/createEntity",
+    "https://localhost:3000/render/insertOneInProduct"
   ],
 
   "web_accessible_resources": [

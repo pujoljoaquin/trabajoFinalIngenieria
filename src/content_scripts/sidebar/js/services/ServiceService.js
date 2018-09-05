@@ -27,7 +27,8 @@ function ExistingServiceEdition() {
 serviceCreator.service("ServiceService", [
   "$q",
   "$timeout",
-  function($q, $timeout) {
+  "$http",
+  function($q, $timeout, $http) {
     var $service = this;
 
     this.objectModel = "";
@@ -342,8 +343,31 @@ serviceCreator.service("ServiceService", [
         //console.log($service.services[$service.currentServiceKey].itemType);
         console.log("Productos hasta ahora:");
         console.log($service.products);
-        $service.products[properties.name] = properties;
+        $service.products[properties.class] = properties;
         this.storage.set("products",$service.products);
+        var deferred = $q.defer();
+        $http({
+            method : 'POST',
+            url : 'http://localhost:3000/createEntity',
+            headers: {'Content-type': 'application/json'},
+            data: properties
+        }).then(function(response) {
+            deferred.resolve(response.data);
+        }).catch(function(response) {
+            deferred.reject(response);
+        });
+        //var url = 'http://localhost:3000/createEntity';
+        //$http.open('POST', url, true);
+
+        //Send the proper header information along with the request
+        //$http.setRequestHeader('Content-type', 'application/json');
+
+        //$http.onreadystatechange = function() {//Call a function when the state changes.
+        //    if(http.readyState == 4 && http.status == 200) {
+        //        alert(http.responseText);
+        //    }
+        //}
+        //$http.send(properties);
         return this.asDeferred(function() {
             //$service.services[$service.currentServiceKey].properties = properties;
             return;
@@ -352,6 +376,30 @@ serviceCreator.service("ServiceService", [
           //  $service.services[$service.currentServiceKey].properties = properties;
           //  return;
         //});
+    };
+
+    this.sendObject = function(objInstanciado) {
+        var deferred = $q.defer();
+        $http({
+            method : 'POST',
+            url : 'http://localhost:3000/render/insertOneInProduct',
+            headers: {'Content-type': 'application/json'},
+            data: objInstanciado
+        }).then(function(response) {
+            deferred.resolve(response.data);
+        }).catch(function(response) {
+            deferred.reject(response);
+        });
+        //$.ajax({
+        //  type: "POST",
+        //  url: 'http://localhost:3000/render/insertOneInProduct',
+        //  data: objInstanciado,
+        //  dataType: 'application/json'
+        //});
+        return this.asDeferred(function() {
+            //$service.services[$service.currentServiceKey].properties = properties;
+            return;
+        });
     };
 
     this.removeProduct = function(key) {

@@ -23,6 +23,10 @@ serviceCreator.config(function($stateProvider, $urlRouterProvider, $compileProvi
     .state("EndOfProcess", {
       url: "/EndOfProcess",
       templateUrl: "end-of-process.html"
+    })
+    .state("SelectProductProperties", {
+      url: "/SelectProductProperties",
+      templateUrl: "select-produt-properties.html"
     });
 
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|chrome-extension|moz-extension):|data:image\//);

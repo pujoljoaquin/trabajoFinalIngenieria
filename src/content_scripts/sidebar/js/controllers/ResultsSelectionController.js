@@ -54,6 +54,8 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
   $scope.saveDataModel = function() {
     //Splitted because there are other properties of "Results" managed by other controllers
     ServiceService.setResultsSelector($scope.service.results.selector);
+    console.log("SELECTION: SAVEDATAMODEL");
+    console.log($scope.service.results.selector);
     //ServiceService.setResultsPreview($scope.service.results.preview);
     ServiceService.setResultsName($scope.service.results.name).then(function() {
       ServiceService.updateServices();
@@ -78,6 +80,8 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
 
     var select = document.querySelector("#result-selector");
     select.innerHTML = "";
+    console.log("JOAQUIN SELECTORS");
+    console.log(selectors);
 
     Object.keys(selectors).forEach(function(key) {
 
