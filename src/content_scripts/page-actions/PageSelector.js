@@ -41,7 +41,7 @@ class PageSelector{
 	getSetOfXPathsByOccurrences (element, relativeElem, generateRelativeSelector){
 
 		var xpi = new XPathInterpreter(),
-			labeledXpaths = {}, 
+			labeledXpaths = {},
 			xpaths = xpi.getMultipleXPaths(element, relativeElem || element.ownerDocument);
 
 	    for (var i = xpaths.length - 1; i >= 0; i--) {
@@ -51,7 +51,7 @@ class PageSelector{
 
 	            if(labeledXpaths[elemsBySelector])
 	            	this.addToExistingLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths)
-	            else this.createNewLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths); 
+	            else this.createNewLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths);
 	        }
 	    }
 
@@ -59,18 +59,18 @@ class PageSelector{
 	}
 	addToExistingLabeledXpath (ocurrences, xpath, labeledXpaths){
 
-		var xpaths = labeledXpaths[ocurrences]; 
+		var xpaths = labeledXpaths[ocurrences];
 		//console.log("existing", xpaths, " with ", xpath);
 			xpaths.push(xpath);
 
-		labeledXpaths[ocurrences] = xpaths; 
+		labeledXpaths[ocurrences] = xpaths;
 	}
 	createNewLabeledXpath (ocurrences, xpath, labeledXpaths){
 
-		labeledXpaths[ocurrences] = [xpath]; 
+		labeledXpaths[ocurrences] = [xpath];
 	}
 	loadListeners (){
-		
+
 		var me = this;
 		this.scoped;
 
@@ -78,7 +78,7 @@ class PageSelector{
 
 			var matchingElements = me.withParentElements(me.selectedElem);
 
-			me.removeHighlightingOnHover(me.selectedElem); 
+			me.removeHighlightingOnHover(me.selectedElem);
 			matchingElements.forEach(targetElem => {
 				me.removeStyleClass(targetElem, me.selectionClass);
 				me.removeStyleClass(targetElem, me.clearBackgroundClass);
@@ -89,23 +89,23 @@ class PageSelector{
 				me.removeStyleClass(me.selectedElem, me.selectableElemClass);
 
 				var selectors = me.getSetOfXPathsByOccurrences(me.selectedElem, me.refElem, me.generateRelativeSelector);
-				
+
 				me.addStyleClass(me.selectedElem, me.selectableElemClass);
 				me.addHighlightingOnHover(me.selectedElem);
 
-				browser.runtime.sendMessage({ 
+				browser.runtime.sendMessage({
 					"call": evt.params.onElementSelection, /*onElementSelection*/
 					"args": {
-						"selectors": selectors, 
+						"selectors": selectors,
 						"previewSource": preview,
 						"scoped": evt.params.scoped,
 						"exampleValue": (me.selectedElem.textContent)? me.selectedElem.textContent.trim() : "",
 						"call": evt.params.onElementSelection
 					}
 				});
-			})	
+			})
 		};
-		this.mouseEnterSelection = function(evt) {  
+		this.mouseEnterSelection = function(evt) {
 
 			evt.preventDefault(); evt.stopImmediatePropagation();
 			//me.selectedElem = evt.target;
@@ -122,28 +122,28 @@ class PageSelector{
 			}
 			return nodes;
 		};
-		this.mouseLeaveSelection = function(evt) {  
+		this.mouseLeaveSelection = function(evt) {
 
 			me.removeStyleClass(this, me.onHoverHighlightClass);
 			evt.preventDefault(); evt.stopImmediatePropagation();
 		};
 		this.preventAnyAction = function(evt){
-			
+
 			evt.preventDefault(); evt.stopImmediatePropagation();
 			return false; //This is for preventing anchors
 		};
 		this.preventActionsListener = function(evt){
-			
+
 			evt.preventDefault(); evt.stopImmediatePropagation();
 			me.selectedElem = this; //evt.target;
-			
+
 			if(me.selectedElem ) {
 				if(me.hasAugmentedAction(me.selectedElem)){
 					me.executeAugmentedActions({"target": me.selectedElem, "type": evt.type});
 				}
-			} 
+			}
 
-			return false; 
+			return false;
 		};
 	};
 	getAllVisibleDomElements (){
@@ -153,7 +153,7 @@ class PageSelector{
 		return document.querySelectorAll("div, input, a, img, span, label, ul, li, p, pre, cite, em"); //:not(.first)
 	};
 	getCurrentSidebarElements (){
-		
+
 		return document.querySelector("#andes-sidebar").querySelectorAll("*");
 	};
 	highlightMatchingElements (data){
@@ -177,7 +177,7 @@ class PageSelector{
 		var me=this;
 		this.preventFormsOnSubmit();
 		this.getAllVisibleDomElementsButBody().forEach(function(elem){
-			
+
 			elem.addEventListener("click", me.preventActionsListener, false);
 			me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
 				elem.addEventListener(eventToPrevent, me.preventAnyAction, false);
@@ -187,10 +187,10 @@ class PageSelector{
 	preventFormsOnSubmit (){
 
 		//TODO: it is not working with "addEventListener". This is a problem because maybe we can not resore the original behaviour after this
-		document.querySelectorAll("form").forEach(function(form){ 
-			form.onsubmit = function(evt){ 
+		document.querySelectorAll("form").forEach(function(form){
+			form.onsubmit = function(evt){
 	    		return false;
-			}; 
+			};
 	    });
 	}
 	restoreDomElementsBehaviour (){
@@ -203,26 +203,26 @@ class PageSelector{
 			elem.removeEventListener("click", me.preventActionsListener, false);
 			me.getEventsNamesToPrevent().forEach(function(eventToPrevent){
 				elem.removeEventListener(eventToPrevent, me.preventAnyAction, false);
-			});		
+			});
 			me.removeHighlightingOnHover(elem);
 		});
 
 		this.removeFullSelectionStyle();
 	};
 	removeAugmentedActions (elem){
-		
+
 		elem.removeAttribute("andes-actions");
 	};
 	removeAllAugmentedActions (elem){
-		
+
 		document.querySelectorAll("*[andes-actions]").forEach(e => e.removeAttribute("andes-actions"));
 	};
 	getEventsNamesToPrevent (){
-		
+
 		return ["click", "mouseup", "mousedown"]; //, "keydown", "keyup", "keypress",
 	};
 	getTargetElements (selector){
-		
+
 		return document.querySelectorAll(selector);
 	};
 	enableElementSelection (data){
@@ -236,16 +236,16 @@ class PageSelector{
 		this.onElementSelectionMessage = data.onElementSelection;
 
 	    this.addSelectionListener(
-	    	elements, 
-	    	data.onElementSelection, 
-	    	"click", 
+	    	elements,
+	    	data.onElementSelection,
+	    	"click",
 	    	data.scoped,
 	    	data.removeStyleOnSelection,
 	    	data.generateRelativeSelector,
 	    	data /*este solo es laposta*/
 	    );
 	    this.undarkifySidebarElements();
-	    this.darkify(document.body); 
+	    this.darkify(document.body);
 	};
 	disableElementSelection (data){
 
@@ -256,37 +256,37 @@ class PageSelector{
 	};
 	darkifyAllDomElements (){
 
-		var me = this, elems = this.getAllVisibleDomElements(); 
-		elems.forEach(function(elem) { 
+		var me = this, elems = this.getAllVisibleDomElements();
+		elems.forEach(function(elem) {
 			me.darkify(elem);
 	    });
 	}
 	undarkifyAllDomElements (){
 
-		var me = this, elems = this.getAllVisibleDomElements(); 
-		elems.forEach(function(elem) { 
+		var me = this, elems = this.getAllVisibleDomElements();
+		elems.forEach(function(elem) {
 			me.undarkify(elem);
 	    });
 	}
 	removeElemsHighlightingClass (selector){
 
-		var me = this, elems = this.lastUsedExtractor.getElements(selector); 
-		elems.forEach(function(elem) { 
+		var me = this, elems = this.lastUsedExtractor.getElements(selector);
+		elems.forEach(function(elem) {
 			me.removeSelectableElemStyle(elem);
 	    });
 	}
 	hasAugmentedAction (target){
 
-		return (this.getAugmentedActions(target).length > 0);	
+		return (this.getAugmentedActions(target).length > 0);
 	}
 	executeAugmentedActions (evt){
 
 		var actions = this.getAugmentedActions(evt.target);
-		
+
 		for (var i = actions.length - 1; i >= 0; i--) {
 			if(evt.type.toUpperCase() == actions[i].event.toUpperCase()){
 				evt.params = actions[i].params;
-				this[actions[i].listener](evt); //e.g. 
+				this[actions[i].listener](evt); //e.g.
 			}
 		}
 	}
@@ -316,7 +316,7 @@ class PageSelector{
 			elem.setAttribute("andes-actions", JSON.stringify(actions));
 		}
 	}
-	addSelectionListener (elements, onElementSelection, onEvent, scoped, 
+	addSelectionListener (elements, onElementSelection, onEvent, scoped,
 		removeStyleOnSelection, generateRelativeSelector, data){
 
 		var me = this;
@@ -325,21 +325,21 @@ class PageSelector{
 			this.scoped = scoped;
 			this.generateRelativeSelector = generateRelativeSelector;
 
-		elements.forEach(function(elem) { 
-			me.undarkify(elem);	
+		elements.forEach(function(elem) {
+			me.undarkify(elem);
 			me.addHighlightingOnHover(elem);
 			me.addSelectableElemStyle(elem);
 			me.addAugmentedAction(elem, {
-				"listener": "selectionListener", 
-				"event": onEvent, 
+				"listener": "selectionListener",
+				"event": onEvent,
 				"params": data
 			});
-	    });	
+	    });
 	}
 	generatePreview (element){
 
 		const prom = new Promise((resolve, reject) => {
-	        
+
 	    this.removeSelectableElemStyle(element);
 		this.addClearBackground(element);
 		var ps = this;
@@ -355,7 +355,7 @@ class PageSelector{
 		  );
 	    });
 
-	    return prom; 
+	    return prom;
 	}
 	addHighlightingOnHover (elem){
 		elem.addEventListener("mouseover", this.mouseEnterSelection, false);
@@ -369,15 +369,15 @@ class PageSelector{
 	}
 	addSelectableElemStyle (elem){
 
-		this.addStyleClass(elem, this.selectableElemClass);  
+		this.addStyleClass(elem, this.selectableElemClass);
 	}
 	addSelectionClass (elem){
 
-		this.addStyleClass(elem, this.selectionClass);  
+		this.addStyleClass(elem, this.selectionClass);
 	}
 	removeSelectionClass (elem){
 
-		this.removeStyleClass(elem, this.selectionClass);  
+		this.removeStyleClass(elem, this.selectionClass);
 	}
 	removeFullSelectionStyle (){
 
@@ -390,7 +390,7 @@ class PageSelector{
 		return Promise.resolve();
 	}
 	removeHighlightingOnHoverFrom (selector){
-		
+
 		this.selectedElem = undefined;
 
 		var me = this;
@@ -418,10 +418,10 @@ class PageSelector{
 	undarkifySidebarElements (){
 
 		var me = this;
-		this.getCurrentSidebarElements().forEach(function(elem) { 
-			me.undarkify(elem);		
+		this.getCurrentSidebarElements().forEach(function(elem) {
+			me.undarkify(elem);
 	    });
-	    this.undarkify(document.querySelector("#andes-sidebar"));	
+	    this.undarkify(document.querySelector("#andes-sidebar"));
 	}
 	isAVisibleElement (elem){
 
@@ -432,7 +432,7 @@ class PageSelector{
 		this.addStyleClass(elem, this.obfuscatedClass);
 	};
 	addClearBackground (elem){
-		
+
 		this.addStyleClass(elem, this.clearBackgroundClass);
 	};
 	addStyleClass (elem, className){
@@ -442,28 +442,28 @@ class PageSelector{
 		}
 	};
 	removeStyleClass (elem, className){
-		
+
 		if(elem && elem.classList && elem.classList.contains(className)){
 			elem.classList.remove(className);
 		}
 	};
 	undarkify (elem){
-		
+
 		this.removeStyleClass(elem, this.obfuscatedClass);
 	};
 	removeSelectableElemStyle (elem){
-		
-		this.removeStyleClass(elem, this.selectableElemClass);	
+
+		this.removeStyleClass(elem, this.selectableElemClass);
 	};
 	removeClearBackground (elem){
-		
-		this.removeStyleClass(elem, this.clearBackgroundClass);	
+
+		this.removeStyleClass(elem, this.clearBackgroundClass);
 	};
 };
 
 var pageManager = new PageSelector();
 browser.runtime.onMessage.addListener(function callPageSideActions(request, sender) {
-
+    console.log("PAGESELECTOR.JS");
 	if(pageManager[request.call]){
 		console.log(request.call + " from PageSelector");
 		pageManager[request.call](request.args);

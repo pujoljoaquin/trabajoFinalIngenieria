@@ -152,9 +152,9 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
     ServiceService.sendModel(obj).then(function() {
         console.log("SE ENVIO AL SERVICIO EL MODELO ABSTRACTO OBTENIDO");
     });
-    ServiceService.sendObject(objInstanciado).then(function() {
-        console.log("Objeto instanciado enviado");
-    });
+    //ServiceService.sendObject(objInstanciado).then(function() {
+    //    console.log("Objeto instanciado enviado");
+    //});
 
     };
 

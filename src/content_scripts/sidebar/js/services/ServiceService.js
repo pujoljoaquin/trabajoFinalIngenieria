@@ -345,17 +345,29 @@ serviceCreator.service("ServiceService", [
         console.log($service.products);
         $service.products[properties.class] = properties;
         this.storage.set("products",$service.products);
+        var ejemplo = {'name': 'fsfsf', 'description': 'wrwrwr'};
         var deferred = $q.defer();
-        $http({
-            method : 'POST',
-            url : 'http://localhost:3000/createEntity',
-            headers: {'Content-type': 'application/json'},
+       // $http({
+        //    method : 'POST',
+        //    url : 'http://localhost:3000/createEntity',
+        //    headers: {'Content-type': 'application/json'},
+        //    data: properties
+        //}).then(function(response) {
+        //    deferred.resolve(response.data);
+        //}).catch(function(response) {
+        //    deferred.reject(response);
+        //});
+        //var req = new XMLHttpRequest();
+        //req.open('POST', 'http://localhost:3000/createEntity', true);
+        //req.send(properties);
+        chrome.runtime.sendMessage({
+            method: 'POST',
+            action: 'xhttp',
+            url: 'http://localhost:3000/createEntity',
+            headers: {'ContentType': 'application/json'},
             data: properties
-        }).then(function(response) {
-            deferred.resolve(response.data);
-        }).catch(function(response) {
-            deferred.reject(response);
         });
+        //content tyoe
         //var url = 'http://localhost:3000/createEntity';
         //$http.open('POST', url, true);
 
