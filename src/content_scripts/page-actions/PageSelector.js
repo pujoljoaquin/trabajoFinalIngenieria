@@ -54,7 +54,7 @@ class PageSelector{
 	            else this.createNewLabeledXpath(elemsBySelector, xpaths[i], labeledXpaths);
 	        }
 	    }
-
+        console.log(labeledXpaths);
 	    return labeledXpaths;
 	}
 	addToExistingLabeledXpath (ocurrences, xpath, labeledXpaths){

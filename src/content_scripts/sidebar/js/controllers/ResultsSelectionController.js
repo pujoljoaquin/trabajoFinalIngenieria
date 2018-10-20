@@ -20,13 +20,12 @@ serviceCreator.controller('ResultsSelectionController', function($scope, $state,
 
       $scope.enableDomElementSelection("li, tr, div:not(#andes-sidebar)", "onElementSelection", ".well");
 
-      if ($scope.service.results.selector) {
-
+      //if ($scope.service.results.selector) {
         var availableSelectors = {};
         availableSelectors[service.results.selector.label] = [service.results.selector.value];
 
         $scope.onElementSelection({"previewSource": service.results.preview, "selectors": availableSelectors});
-      }
+      //}
     });
   };
   $scope.getValidationRules = function() {

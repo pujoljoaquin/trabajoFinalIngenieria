@@ -1,4 +1,4 @@
-serviceCreator.controller('ResultsPropertiesController', function($scope, $http, $q, $state, ServiceService) {
+serviceCreator.controller('CreateProductObjectController', function($scope, $http, $q, $state, ServiceService) {
 
   AbstractController.call(this, $scope, $state, ServiceService);
   $scope.service = {
@@ -11,8 +11,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
     ServiceService.getService().then(function(service) {
 
       $scope.service = service;
-      console.log("loadDataModel!!!");
-      console.log(service.results);
       var selector = $scope.getElementsSelector(service.results.selector.value);
       $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
 
@@ -74,9 +72,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
   };
 
   $scope.highlightPropertiesInDom = function(properties, containerSelector) {
-    console.log("Higlight properties!!!!");
-    console.log(properties);
-    console.log(properties[key]);
     Object.keys(properties).forEach(function(key) {
       //console.log("highlighting: ", key, properties[key].relativeSelector);
       $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
@@ -90,13 +85,6 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
   };
 
   $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
-    console.log("onElementSelection!!!!!!");
-    console.log("data");
-    console.log(data);
-    console.log("data.selectors");
-    console.log(data.selectors);
-    console.log("data.selectors(Object.keys(data.selectors)[0])");
-    console.log(data.selectors[Object.keys(data.selectors)[0]]);
     var prop = {
       "name": "",
       "exampleValue": data.exampleValue.length > 35
@@ -132,10 +120,12 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
     var nameAbstractModel = ServiceService.getObjectModel();
     var obj = {
         class: nameAbstractModel,
-        fields: [],
-        createdObjects: []
+        fields: []
     };
-    var objInstanciado = {};
+    //var objInstanciado = {
+    //    "name": model.name.exampleValue,
+    //    "description": model.description.exampleValue
+    //};
     var atr = {
         "name": '',
         "type": "string",
@@ -152,18 +142,16 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
             "nullable": "false"
         };
         obj.fields.push(atr);
-        objInstanciado[value.name] = value.exampleValue;
         //angular.forEach(value, function(atrValue, atr) {
         //    console.log(atr + ': ' + atrValue);
         //});
     });
-    obj.createdObjects.push(objInstanciado);
     console.log(obj);
     ServiceService.sendModel(obj).then(function() {
         console.log("SE ENVIO AL SERVICIO EL MODELO ABSTRACTO OBTENIDO");
     });
-    //ServiceService.saveObject(objInstanciado).then(function() {
-    //    console.log("Objeto instanciado guardado");
+    //ServiceService.sendObject(objInstanciado).then(function() {
+    //    console.log("Objeto instanciado enviado");
     //});
 
     };
@@ -171,8 +159,7 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
   $scope.getUserEditedProperties = function() {
     var props = {},
       propsElems = document.querySelectorAll(".list-group-item");
-    console.log("getUserEditedProperties");
-    console.log(propsElems);
+
     for (var i = propsElems.length - 1; i >= 0; i--) {
 
       var prop = propsElems[i].querySelector("button").prop;

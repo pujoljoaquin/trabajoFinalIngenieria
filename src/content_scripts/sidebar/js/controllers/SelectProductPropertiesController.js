@@ -1,221 +1,115 @@
 serviceCreator.controller('SelectProductPropertiesController', function($scope, $state, ServiceService) {
-
   AbstractController.call(this, $scope, $state, ServiceService);
+
   $scope.service = {
     results: {
-      selector: '//div[1]',
-      properties: {}
+      name: undefined,
+      selector: {
+        label: undefined,
+        value: undefined
+      },
+      preview: undefined
     }
   };
+
+  $scope.product = {};
+
   $scope.loadDataModel = function() {
+    $scope.product = ServiceService.getCurrentProduct();
     ServiceService.getService().then(function(service) {
+      $scope.service.results.selector = service.results.selector;
+      $scope.service.results.preview = service.results.preview;
+      $scope.service.results.name = service.results.name;
 
-      $scope.service = service;
-      var selector = $scope.getElementsSelector(service.results.selector.value);
-      $scope.loadPropertiesIntoSidebar($scope.service.results.properties);
+      $scope.enableDomElementSelection("li, tr, div:not(#andes-sidebar)", "onElementSelection", ".well");
 
-      $scope.enableDomElementSelection(selector, "onElementSelection", ".well", "XpathScrapper", service.results.selector.value, false, true).then(function() {
-        $scope.highlightPropertiesInDom($scope.service.results.properties, $scope.service.results.selector.value);
-      });
-    });
-  };
+      if ($scope.service.results.selector) {
+        var availableSelectors = {};
+        availableSelectors[service.results.selector.label] = [service.results.selector.value];
 
-  $scope.loadPrevStep = function(aState) {
-    if (this.areRequirementsMet()) {
-      $scope.saveDataModel();
-      $scope.undoActionsOnDom();
-      $state.go(aState);
-    }
-  };
-
-  $scope.undoActionsOnDom = function(aState) {
-
-    var elemsSelector = $scope.getElementsSelector($scope.service.results.selector.value);
-    $scope.disableDomElementSelection(elemsSelector);
-    $scope.removeFullSelectionStyle();
-  };
-
-  $scope.arePropertiesDefined = function() {
-    var inputs = document.querySelectorAll("input");
-    this.removeFormElementById("no_props_error");
-
-    if (inputs == undefined || inputs.length <= 0) {
-      this.showErrorMessageByElems("no_props_error", document.querySelector(".list-group"), "props_are_required");
-      return false;
-    };
-
-    return true;
-  };
-
-  $scope.arePropertiesValuesDefined = function() {
-
-    var inputs = document.querySelectorAll("input"),
-      inputsAreFilled = true;
-
-    for (var i = inputs.length - 1; i >= 0; i--) {
-      if (inputs[i].value.length <= 2) {
-        inputsAreFilled = false;
-
-        this.removeFormElementById(inputs[i].id + "_error");
-        this.showErrorMessageByElems(inputs[i].id + "_error", inputs[i], "this_field_is_required");
-      } else {
-        // I don't know why I can not access the elem from the abstract class behaviour. So...
-        this.removeFormElementById(inputs[i].id + "_error");
+        $scope.onElementSelection({"previewSource": service.results.preview, "selectors": availableSelectors});
       }
-    }
-
-    return inputsAreFilled;
-  };
-
-  $scope.areRequirementsMet = function() {
-    return (this.arePropertiesDefined() && this.arePropertiesValuesDefined());
-  };
-
-  $scope.highlightPropertiesInDom = function(properties, containerSelector) {
-    Object.keys(properties).forEach(function(key) {
-      //console.log("highlighting: ", key, properties[key].relativeSelector);
-      $scope.highlightPropertyInDom(properties[key].relativeSelector, containerSelector);
     });
   };
-
-  $scope.getElementsSelector = function(selector) {
-
-    return selector + "//span | " + selector + "//a"; //changed for the experiment. Prev value: *
-    //( selector.length-3, selector.length == "[1]")? selector + "//*": selector + "[1]//*";
-  };
-
-  $scope.onElementSelection = function(data) { //selector exampleValue (will have also a name)
-    console.log("$scope.onElementSelection");
-
-    var prop = {
-      "name": "",
-      "exampleValue": data.exampleValue.length > 35
-        ? data.exampleValue.substring(0, 35) + "..."
-        : data.exampleValue,
-      "relativeSelector": data.selectors[Object.keys(data.selectors)[0]][0]
+  $scope.getValidationRules = function() {
+    return {
+      "rules": {
+        "results_tag": {
+          "minlength": 2,
+          "required": true
+        }
+      },
+      "messages": {
+        results_tag: browser.i18n.getMessage("this_field_is_required")
+      },
+      "errorPlacement": function(error, element) {
+        error.appendTo('#results_tag_container');
+      }
     };
+  }
+  $scope.areRequirementsMet = function() {
 
-    var propControl = this.addPropertyToSidebar(prop);
-    propControl.querySelector("input").focus();
-
-    //this.highlightPropertyInDom(prop.relativeSelector, $scope.service.results.selector.value);
-    this.removeFormElementById("no_props_error");
+    return ($("form").valid() && $scope.service.results.selector)
+      ? true
+      : false;
   };
-
   $scope.saveDataModel = function() {
-    console.log("SELECCIONE TODAS LAS PROPERTIES Y DI SAVE, LLAMO A saveDataModel");
-    console.log("Begin Joaquin");
-    console.log("Pre $scope.service.results.properties");
-    console.log($scope.service.results.properties);
-    $scope.service.results.properties = $scope.getUserEditedProperties();
-    console.log("Post seteo");
-    console.log($scope.service.results.properties);
-    $scope.sendDataModel($scope.service.results.properties);
-    ServiceService.setProperties($scope.service.results.properties).then(function() {
+    //Splitted because there are other properties of "Results" managed by other controllers
+    ServiceService.setResultsSelector($scope.service.results.selector);
+    console.log("SELECTION: SAVEDATAMODEL");
+    console.log($scope.service.results.selector);
+    //ServiceService.setResultsPreview($scope.service.results.preview);
+    ServiceService.setResultsName($scope.service.results.name).then(function() {
       ServiceService.updateServices();
     });
   };
-
-  $scope.sendDataModel = function(model) {
-    console.log("Codigo joaquin, nueva funcion");
-    console.log(model);
-    var nameAbstractModel = ServiceService.getObjectModel();
-    var obj = {
-        name: nameAbstractModel,
-        atributos: []
-    };
-    angular.forEach(model, function(value, key) {
-        console.log(key + ': ' + value);
-        obj.atributos.push(value.name);
-        //angular.forEach(value, function(atrValue, atr) {
-        //    console.log(atr + ': ' + atrValue);
-        //});
-    });
-    console.log(obj);
-    ServiceService.sendModel(obj).then(function() {
-        console.log("SE ENVIO AL SERVICIO EL MODELO ABSTRACTO OBTENIDO");
-    });
-    };
-
-  $scope.getUserEditedProperties = function() {
-    var props = {},
-      propsElems = document.querySelectorAll(".list-group-item");
-
-    for (var i = propsElems.length - 1; i >= 0; i--) {
-
-      var prop = propsElems[i].querySelector("button").prop;
-      prop.name = propsElems[i].querySelector("input").value;
-
-      props[prop.name] = prop;
-    };
-
-    return props;
+  $scope.undoActionsOnDom = function() {
+    $scope.removeFullSelectionStyle();
+    $scope.disableDomElementSelection("li, tr, div:not(#andes-sidebar)");
   };
+  $scope.onElementSelection = function(data) {
 
-  $scope.loadPropertiesIntoSidebar = function(properties) {
-    Object.keys(properties).forEach(function(key) {
-      $scope.addPropertyToSidebar(properties[key]);
+    $scope.showAllHiddenElements();
+
+    //$scope.service.results.preview = data.previewSource;
+    //$scope.loadPreview("#result-preview-image", data.previewSource);
+    console.log("fill in");
+    $scope.fillOccurrencesSelector(data.selectors);
+    document.querySelector("#result-selector").onchange();
+    $scope.focusElement("#result-selector");
+  }
+  $scope.fillOccurrencesSelector = function(selectors) {
+
+    var select = document.querySelector("#result-selector");
+    select.innerHTML = "";
+    console.log("JOAQUIN SELECTORS");
+    console.log(selectors);
+
+    Object.keys(selectors).forEach(function(key) {
+
+      var elemsBySelectorLabel = key > 1
+        ? browser.i18n.getMessage("occurrences")
+        : browser.i18n.getMessage("occurrence");
+
+      var opt = document.createElement("option");
+      opt.setAttribute("andes-occurrences", key);
+      opt.value = selectors[key][0];
+      opt.text = key + " " + elemsBySelectorLabel;
+      select.add(opt);
     });
-    console.log("LLAME AL loadPropertiesIntoSidebar")
-    console.log(properties);
+
+    select.onchange = function() {
+      $scope.service.results.selector = {
+        label: this.options[this.selectedIndex].getAttribute("andes-occurrences"),
+        value: this.value
+      };
+      browser.runtime.sendMessage({
+        "call": "selectMatchingElements",
+        "args": {
+          "selector": select.value
+        }
+      });
+    }
   };
-
-  $scope.highlightPropertyInDom = function(relativeSelector, refElemSelector) {
-
-    browser.runtime.sendMessage({
-      "call": "selectMatchingElements",
-      "args": {
-        "selector": relativeSelector,
-        "scrapper": "XpathScrapper",
-        "refElemSelector": refElemSelector
-      }
-    });
-  };
-
-  $scope.addPropertyToSidebar = function(prop) {
-    var property = document.createElement("div");
-    property.className = "list-group-item";
-
-    var closebutton = document.createElement("button");
-    closebutton.className = "list-item-close-button";
-    closebutton.innerHTML = "<span class='glyphicon glyphicon-remove'></span>";
-    closebutton.prop = prop;
-    closebutton.onclick = function() {
-      //$scope.removeProperty(this.prop);
-      this.parentElement.remove();
-    };
-    property.appendChild(closebutton);
-
-    var propNameGroup = document.createElement("div");
-    propNameGroup.className = "form-group";
-    property.appendChild(propNameGroup);
-
-    var propNameLabel = document.createElement("label");
-    propNameLabel.innerHTML = browser.i18n.getMessage("property_name");
-    propNameGroup.appendChild(propNameLabel);
-
-    var propNameInput = document.createElement("input");
-    propNameInput.setAttribute("type", "text");
-    propNameInput.className = "form-control resultProperty";
-    propNameInput.id = Date.now(); //for the validation
-    propNameInput.value = prop.name;
-    propNameGroup.appendChild(propNameInput);
-    /*$(propNameInput).rules('add', {
-              "minlength": 2,
-              "required": true
-          });*/
-
-    var propValue = document.createElement("i");
-    //propValue.className = "list-group-item-text small";
-    propValue.innerHTML = browser.i18n.getMessage("example_value") + ": " + prop.exampleValue; //$scope.listProperties();
-    property.appendChild(propValue);
-    console.log("ADDING PROPERTY");
-    console.log(prop);
-    console.log($scope.service)
-
-    document.querySelector("#properties").appendChild(property);
-    return property;
-  };
-
   $scope.initialize();
 });

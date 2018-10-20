@@ -110,11 +110,11 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
   $scope.loadProductUI = function(product) {
     const listItem = document.createElement("li");
     listItem.className = "list-group-item justify-content-between list-group-item-action";
-    listItem.innerHTML = product.name.length > 20
-      ? product.name.substring(0, 20) + '...'
-      : product.name;
+    listItem.innerHTML = product.class.length > 20
+      ? product.class.substring(0, 20) + '...'
+      : product.class;
 
-    listItem.setAttribute("productId", product.name);
+    listItem.setAttribute("productId", product.class);
     //listItem.onclick = function() {
     //  ServiceService.setCurrentServiceKey(service.name).then(function() {
     //    ServiceService.setBuildingStrategy("ExistingServiceEdition").then(function() {
@@ -140,15 +140,25 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
     addButton.className = "btn btn-default btn-list";
     addButton.innerHTML = "<i class='glyphicon glyphicon-plus'></i>";
     addButton.onclick = function(evt) {
-      //evt.preventDefault();
-      //evt.stopImmediatePropagation();
-      $scope.loadNextStep('SelectProductProperties');
       //const control = this;
-      //const iframe = document.createElement("iframe");
-      //iframe.src = "http://216.250.114.200";
-      //ServiceService.removeProduct(control.parentElement.getAttribute("productId")).then(function() {
-      //  control.parentElement.remove();
+      //ServiceService.setCurrentProduct(control.parentElement.getAttribute("productId"));
+      //console.log(ServiceService.getCurrentProduct());
+      //$scope.undoActionsOnDom();
+      //ServiceService.setObjectModel(control.parentElement.getAttribute("productId"));
+      //ServiceService.setCurrentServiceKey(control.parentElement.getAttribute("productId"));
+      //ServiceService.setName(control.parentElement.getAttribute("productId")).then(function() {
+      //ServiceService.updateServices();
+      //  browser.runtime.sendMessage({call: "populateApisMenu"});
       //});
+      //$state.go('SelectProductProperties');
+      const control = this;
+      ServiceService.setCurrentProduct(control.parentElement.getAttribute("productId"));
+      console.log(ServiceService.getCurrentProduct());
+      console.log("Productos a enviar: ");
+      console.log(ServiceService.getCurrentObjectsForProduct());
+      ServiceService.sendCurrentObjectsForProduct().then(function() {
+        console.log("Objetos instanciados enviado");
+      });
     };
     const iframe = document.createElement('iframe');
     // Must be declared at web_accessible_resources in manifest.json

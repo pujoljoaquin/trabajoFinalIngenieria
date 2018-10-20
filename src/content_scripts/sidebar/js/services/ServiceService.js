@@ -32,6 +32,7 @@ serviceCreator.service("ServiceService", [
     var $service = this;
 
     this.objectModel = "";
+    this.currentProduct = "";
     this.services;
     this.currentServiceKey;
     this.buildingStrategy;
@@ -340,78 +341,35 @@ serviceCreator.service("ServiceService", [
 
     this.sendModel = function(properties) { // ExistingServiceEdition || NewServiceEdition
         console.log(properties);
-        //console.log($service.services[$service.currentServiceKey].itemType);
         console.log("Productos hasta ahora:");
         console.log($service.products);
         $service.products[properties.class] = properties;
         this.storage.set("products",$service.products);
-        var ejemplo = {'name': 'fsfsf', 'description': 'wrwrwr'};
         var deferred = $q.defer();
-       // $http({
-        //    method : 'POST',
-        //    url : 'http://localhost:3000/createEntity',
-        //    headers: {'Content-type': 'application/json'},
-        //    data: properties
-        //}).then(function(response) {
-        //    deferred.resolve(response.data);
-        //}).catch(function(response) {
-        //    deferred.reject(response);
-        //});
-        //var req = new XMLHttpRequest();
-        //req.open('POST', 'http://localhost:3000/createEntity', true);
-        //req.send(properties);
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
             method: 'POST',
             action: 'xhttp',
             url: 'http://localhost:3000/createEntity',
             headers: {'ContentType': 'application/json'},
             data: properties
         });
-        //content tyoe
-        //var url = 'http://localhost:3000/createEntity';
-        //$http.open('POST', url, true);
-
-        //Send the proper header information along with the request
-        //$http.setRequestHeader('Content-type', 'application/json');
-
-        //$http.onreadystatechange = function() {//Call a function when the state changes.
-        //    if(http.readyState == 4 && http.status == 200) {
-        //        alert(http.responseText);
-        //    }
-        //}
-        //$http.send(properties);
+        this.setCurrentProduct(properties.class);
         return this.asDeferred(function() {
             //$service.services[$service.currentServiceKey].properties = properties;
             return;
         });
-        //return this.asDeferred(function() {
-          //  $service.services[$service.currentServiceKey].properties = properties;
-          //  return;
-        //});
     };
 
-    this.sendObject = function(objInstanciado) {
-        var deferred = $q.defer();
-        $http({
-            method : 'POST',
-            url : 'http://localhost:3000/render/insertOneInProduct',
-            headers: {'Content-type': 'application/json'},
-            data: objInstanciado
-        }).then(function(response) {
-            deferred.resolve(response.data);
-        }).catch(function(response) {
-            deferred.reject(response);
-        });
-        //$.ajax({
-        //  type: "POST",
-        //  url: 'http://localhost:3000/render/insertOneInProduct',
-        //  data: objInstanciado,
-        //  dataType: 'application/json'
-        //});
-        return this.asDeferred(function() {
+    this.saveObject = function(objInstanciado) {
+        //var deferred = $q.defer();
+        //console.log(objInstanciado);
+        //console.log($service.products);
+        //$service.products[properties.class].createdObjects.push(objInstanciado);
+        //this.storage.set("products",$service.products);
+      //  return this.asDeferred(function() {
             //$service.services[$service.currentServiceKey].properties = properties;
-            return;
-        });
+        //    return;
+    //    });
     };
 
     this.removeProduct = function(key) {
@@ -426,6 +384,33 @@ serviceCreator.service("ServiceService", [
 
     this.updateProducts = function() {
       this.storage.set("products", $service.products);
+    };
+
+    this.setCurrentProduct = function(className) {
+        this.currentProduct = className;
+    };
+
+    this.getCurrentProduct = function() {
+        console.log($service.products[this.currentProduct]);
+        return ($service.products[this.currentProduct]);
+    };
+
+    this.getCurrentObjectsForProduct = function() {
+        console.log($service.products[this.currentProduct]);
+        console.log($service.products[this.currentProduct].createdObjects);
+        return ($service.products[this.currentProduct].createdObjects);
+    };
+
+    this.sendCurrentObjectsForProduct = function() { // ExistingServiceEdition || NewServiceEdition
+        var deferred = $q.defer();
+        angular.forEach($service.products[this.currentProduct].createdObjects, function(value, key) {
+            console.log(key);
+            console.log(value);
+        });
+        return this.asDeferred(function() {
+            //$service.services[$service.currentServiceKey].properties = properties;
+            return;
+        });
     };
 
     this.initialize();
