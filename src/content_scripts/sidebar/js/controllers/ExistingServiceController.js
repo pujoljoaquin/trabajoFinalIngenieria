@@ -95,15 +95,22 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
   };
 
   $scope.loadExistingServices = function(services) {
+    var currentUrl;
     console.log(services);
-    Object.keys(services).forEach(function(key) {
-      $scope.loadServiceUI(services[key]);
+    browser.runtime.sendMessage({call: "getCurrentUrl"}).then(url => {
+        currentUrl = url;
+        console.log(currentUrl);
+        Object.keys(services).forEach(function(key) {
+            if (services[key].urlPattern == currentUrl) {
+                console.log("El template se carga al pertenecer a esta pagina");
+                $scope.loadServiceUI(services[key]);
+            }
+        });
     });
   }
 
   $scope.loadExistingProducts = function(products) {
     var currentUrl;
-    var productUrl;
     browser.runtime.sendMessage({call: "getCurrentUrl"}).then(url => {
         currentUrl = url;
         console.log(currentUrl);

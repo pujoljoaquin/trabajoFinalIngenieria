@@ -25,7 +25,8 @@ serviceCreator.controller('ServiceNameController', function($scope, $state, Serv
 
       var link = document.createElement("a");
       link.href = url;
-      $scope.service.url = link.origin + "/*";
+      //$scope.service.url = link.origin + "/*";
+      $scope.service.url = url;
     });
 
     browser.runtime.sendMessage({call: "getCurrentFavicon"}).then(favIcon => {
