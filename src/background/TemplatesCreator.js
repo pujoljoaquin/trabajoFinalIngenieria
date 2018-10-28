@@ -3,11 +3,19 @@ class TemplatesCreator {
   constructor(){
     this.targetElement = undefined;
     this.sidebarManager = new SidebarManager(
-      "/content_scripts/sidebar/index.html", 
+      "/content_scripts/sidebar/index.html",
       [],
       [this] /* listeners that should implement onSidebarStatusChange */
-    ); 
+    );
     this.backPageSelector = new BackgroundPageSelector();
+  }
+
+  showProductComments(message, xpath) {
+    console.log("Templates Creator");
+    //console.log(document.getElementsByClassName("informatica-compra-al-mejor-precio-en-fravega-com"));
+    //document.getElementsByClassName("informatica-compra-al-mejor-precio-en-fravega-com").append("<h1>HOLA!!!!</h1>");
+    //$(".informatica-compra-al-mejor-precio-en-fravega-com").append("<h1>HOLA!!!!</h1>");
+    this.sidebarManager.showProductComments(message, xpath);
   }
   onSidebarStatusChange(tab) {
 
@@ -25,35 +33,35 @@ class TemplatesCreator {
 
     this.backPageSelector.removeFullSelectionStyle(tab);
   }
-  onElementSelection(data) { 
+  onElementSelection(data) {
 
     this.sidebarManager.onElementSelection(data);
   }
-  onTriggerSelection(data) { 
+  onTriggerSelection(data) {
 
     this.sidebarManager.onTriggerSelection(data);
   };
-  onResultsContainerSelection(data) { 
+  onResultsContainerSelection(data) {
 
     this.sidebarManager.onResultsContainerSelection(data);
   };
-  onFrameReadyForLoadingUrl() { 
+  onFrameReadyForLoadingUrl() {
 
     this.sidebarManager.onFrameReadyForLoadingUrl();
   }
-  onSidebarClosed(tab) { 
+  onSidebarClosed(tab) {
 
     this.sidebarManager.onSidebarClosed();
   }
   setContextualizedElement(extractedData) {
 
-      this.targetElement = extractedData; 
+      this.targetElement = extractedData;
   };
   highlightMatchingElements(tab, data) {
 
     browser.tabs.sendMessage(tab.id, {call: "highlightMatchingElements", args: data});
   }
-  selectMatchingElements(tab, data) { 
+  selectMatchingElements(tab, data) {
 
     browser.tabs.sendMessage(tab.id, {"call": "selectMatchingElements", "args": data });
   };

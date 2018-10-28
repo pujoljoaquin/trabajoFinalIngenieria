@@ -130,41 +130,48 @@ serviceCreator.controller('ResultsPropertiesController', function($scope, $http,
     console.log("Codigo joaquin, nueva funcion");
     console.log(model);
     var nameAbstractModel = ServiceService.getObjectModel();
-    var obj = {
-        class: nameAbstractModel,
-        fields: [],
-        createdObjects: []
-    };
-    var objInstanciado = {};
-    var atr = {
-        "name": '',
-        "type": "string",
-        "unique": "false",
-        "nullable": "false"
-    }
-    angular.forEach(model, function(value, key) {
-        console.log(key);
-        console.log(value);
-        atr = {
-            "name": value.name,
+    var productXPath = ServiceService.getCurrentXPath();
+    var currentUrl;
+    browser.runtime.sendMessage({call: "getCurrentUrl"}).then(url => {
+        currentUrl = url;
+        var obj = {
+            class: nameAbstractModel,
+            fields: [],
+            createdObjects: [],
+            xpath: productXPath,
+            url: currentUrl
+        };
+        var objInstanciado = {};
+        var atr = {
+            "name": '',
             "type": "string",
             "unique": "false",
             "nullable": "false"
-        };
-        obj.fields.push(atr);
-        objInstanciado[value.name] = value.exampleValue;
-        //angular.forEach(value, function(atrValue, atr) {
-        //    console.log(atr + ': ' + atrValue);
+        }
+        angular.forEach(model, function(value, key) {
+            console.log(key);
+            console.log(value);
+            atr = {
+                "name": value.name,
+                "type": "string",
+                "unique": "false",
+                "nullable": "false"
+            };
+            obj.fields.push(atr);
+            objInstanciado[value.name] = value.exampleValue;
+            //angular.forEach(value, function(atrValue, atr) {
+            //    console.log(atr + ': ' + atrValue);
+            //});
+        });
+        obj.createdObjects.push(objInstanciado);
+        console.log(obj);
+        ServiceService.sendModel(obj).then(function() {
+            console.log("SE ENVIO AL SERVICIO EL MODELO ABSTRACTO OBTENIDO");
+        });
+        //ServiceService.saveObject(objInstanciado).then(function() {
+        //    console.log("Objeto instanciado guardado");
         //});
     });
-    obj.createdObjects.push(objInstanciado);
-    console.log(obj);
-    ServiceService.sendModel(obj).then(function() {
-        console.log("SE ENVIO AL SERVICIO EL MODELO ABSTRACTO OBTENIDO");
-    });
-    //ServiceService.saveObject(objInstanciado).then(function() {
-    //    console.log("Objeto instanciado guardado");
-    //});
 
     };
 

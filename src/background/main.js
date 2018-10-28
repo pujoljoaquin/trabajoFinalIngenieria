@@ -1,6 +1,9 @@
 var browserUI = new BrowserUiManager();
 
 browser.browserAction.onClicked.addListener(function updateIcon() {
+    console.log("prueba");
+    console.log(document.getElementsByClassName(".informatica-compra-al-mejor-precio-en-fravega-com"));
+   //document.getElementsByClassName(".informatica-compra-al-mejor-precio-en-fravega-com").append( "<p>Test</p>" );
   	browserUI.toggleSidebar();
 });
 
@@ -22,8 +25,14 @@ browser.runtime.onMessage.addListener(function(message, sender, sendResponse){
         return true; // prevents the callback from being called too early on return
     }
     else {
-        if(browserUI[message.call]) {
-            return browserUI[message.call](message.args); //in case you need to return a promise
+        if (message.action == "ShowProductComments") {
+            console.log(message);
+            browserUI.showProductComments(message.msg.message, message.msg.showXPath);
+        }
+        else{
+            if(browserUI[message.call]) {
+                return browserUI[message.call](message.args); //in case you need to return a promise
+            }
         }
     }
 

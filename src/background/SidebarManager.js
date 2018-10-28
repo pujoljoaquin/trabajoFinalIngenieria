@@ -6,17 +6,29 @@ class SidebarManager{
 		this.listeners = [];
 		this.addListeners(listeners);
 	}
-	addListeners (listeners) { 
+
+    showProductComments(message, showXpath) {
+        var arg = {msg: message, xpath: showXpath};
+        console.log(arg);
+        this.getCurrentTab(function(tab){
+            browser.tabs.sendMessage(tab.id, {
+                call: "showProductComments",
+                args: arg
+            });
+        });
+    }
+
+	addListeners (listeners) {
 
 		for (var i = listeners.length - 1; i >= 0; i--) {
 			this.addListener(listeners[i]);
 		}
 	}
-	addListener (listener) { 
+	addListener (listener) {
 
 		this.listeners.push(listener);
 	}
-	notifyListeners () { 
+	notifyListeners () {
 
 		var me = this;
 		this.getCurrentTab(function(tab){
@@ -25,13 +37,13 @@ class SidebarManager{
 			}
 		});
 	}
-	onFrameReadyForLoadingUrl () { 
+	onFrameReadyForLoadingUrl () {
 
 		//salta a onSidebarStatusChange
-		this.loadChromeUrl(this.defaultFile, this.defaultDependencies); 
+		this.loadChromeUrl(this.defaultFile, this.defaultDependencies);
 		this.notifyListeners();
 	}
-	onSidebarClosed () { 
+	onSidebarClosed () {
 
 		this.notifyListeners();
 	}
@@ -39,37 +51,37 @@ class SidebarManager{
 
 		this.getCurrentTab(function(tab){
 			browser.tabs.sendMessage(tab.id, {
-				call: "loadUrl", 
-				args: { 
+				call: "loadUrl",
+				args: {
 					"url": browser.extension.getURL(chromeUrl),
 					"filePaths": filePaths
 				}
 			});
 		});
 	};
-	onElementSelection (data) { 
+	onElementSelection (data) {
 
 		this.getCurrentTab(function(tab){
 			browser.tabs.sendMessage(tab.id, {
-				call: "onElementSelection", 
+				call: "onElementSelection",
 				args: data
 			});
 		});
 	}
-	onTriggerSelection (data) { 
+	onTriggerSelection (data) {
 
 	  	this.getCurrentTab(function(tab){
 			browser.tabs.sendMessage(tab.id, {
-				call: "onTriggerSelection", 
+				call: "onTriggerSelection",
 				args: data
 			});
 		});
 	};
-	onResultsContainerSelection (data) { 
+	onResultsContainerSelection (data) {
 
 	  	this.getCurrentTab(function(tab){
 			browser.tabs.sendMessage(tab.id, {
-				call: "onResultsContainerSelection", 
+				call: "onResultsContainerSelection",
 				args: data
 			});
 		});
@@ -87,7 +99,7 @@ class SidebarManager{
 		data.domainName = tab.url.split(".")[1];
 
 		browser.tabs.sendMessage(tab.id, {
-			call: data.callback, 
+			call: data.callback,
 			args: data
 		});
 	};
@@ -104,7 +116,7 @@ class SidebarManager{
 			browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
 				callback(tabs[0]);
 			});
-		}catch(err){ console.log(err); }	
+		}catch(err){ console.log(err); }
 	};
 	close () {
 		var me = this;

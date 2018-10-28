@@ -95,15 +95,24 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
   };
 
   $scope.loadExistingServices = function(services) {
+    console.log(services);
     Object.keys(services).forEach(function(key) {
       $scope.loadServiceUI(services[key]);
     });
   }
 
   $scope.loadExistingProducts = function(products) {
-    Object.keys(products).forEach(function(key) {
-      //console.log(products[key]);
-      $scope.loadProductUI(products[key]);
+    var currentUrl;
+    var productUrl;
+    browser.runtime.sendMessage({call: "getCurrentUrl"}).then(url => {
+        currentUrl = url;
+        console.log(currentUrl);
+        Object.keys(products).forEach(function(key) {
+            if (products[key].url == currentUrl) {
+                console.log("El producto se carga pues pertenece a esta pagina");
+                $scope.loadProductUI(products[key]);
+          }
+        });
     });
   }
 
@@ -154,11 +163,14 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
       const control = this;
       ServiceService.setCurrentProduct(control.parentElement.getAttribute("productId"));
       console.log(ServiceService.getCurrentProduct());
-      console.log("Productos a enviar: ");
-      console.log(ServiceService.getCurrentObjectsForProduct());
       ServiceService.sendCurrentObjectsForProduct().then(function() {
         console.log("Objetos instanciados enviado");
+        ServiceService.pruebaPau("PRUEBA FINAL!!!", ServiceService.getCurrentProduct().xpath);
       });
+      //var images = document.getElementsByTagName('img');
+      //for (var i = 0, l = images.length; i < l; i++) {
+      //  images[i].src = 'http://placekitten.com/' + images[i].width + '/' + images[i].height;
+      //}
     };
     const iframe = document.createElement('iframe');
     // Must be declared at web_accessible_resources in manifest.json

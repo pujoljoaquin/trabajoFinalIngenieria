@@ -10,21 +10,26 @@ class BrowserUiManager {
     this.templatesCreator = new TemplatesCreator();
   };
 
+  showProductComments(message, xpath) {
+    console.log("BrowserUiManager");
+    this.templatesCreator.showProductComments(message, xpath);
+  }
+
   getFromRemoteRepo(data) {
     return (new RemoteStorage()).get(data.key);
   }
 
-  onElementSelection(data) { 
+  onElementSelection(data) {
 
     this.templatesCreator.onElementSelection(data);
   };
 
-  onResultsContainerSelection(data) { 
+  onResultsContainerSelection(data) {
 
     this.templatesCreator.onResultsContainerSelection(data);
   };
 
-  selectMatchingElements(data) { 
+  selectMatchingElements(data) {
 
     var me = this;
     this.executeOnCurrentTab(function(tab){
@@ -32,7 +37,7 @@ class BrowserUiManager {
     });
   };
 
-  removeFullSelectionStyle(data) { 
+  removeFullSelectionStyle(data) {
 
     var me = this;
     this.executeOnCurrentTab(function(tab){
@@ -40,12 +45,12 @@ class BrowserUiManager {
     });
   }
 
-  onFrameReadyForLoadingUrl() { 
+  onFrameReadyForLoadingUrl() {
 
     this.templatesCreator.onFrameReadyForLoadingUrl();
   }
 
-  onSidebarClosed(data) { 
+  onSidebarClosed(data) {
 
     var me = this;
     this.executeOnCurrentTab(function(tab){
@@ -69,7 +74,7 @@ class BrowserUiManager {
     return new Promise((resolve, reject) => {
       me.executeOnCurrentTab(function(tab){
 
-        resolve(tab.url); 
+        resolve(tab.url);
       });
     });
   };
@@ -79,9 +84,9 @@ class BrowserUiManager {
     var me = this;
     return new Promise((resolve, reject) => {
       me.executeOnCurrentTab(function(tab){
-        resolve(tab.favIconUrl); 
+        resolve(tab.favIconUrl);
       });
-    });      
+    });
   }
 
   getTemplateTags(data) {
@@ -94,9 +99,9 @@ class BrowserUiManager {
 
       data.value = data.value.toLowerCase();
       var endpoint = this.buildTemplateTagsQuery(data.value);
-      
+
       var req = new XMLHttpRequest();
-      req.open('GET', endpoint, false); 
+      req.open('GET', endpoint, false);
       req.send(null);
 
       var retTags = (req.responseText)? JSON.parse(req.responseText).results.bindings : [];
@@ -108,12 +113,12 @@ class BrowserUiManager {
           'value': retTags[i].resource.value
         });
       };
-        
+
       resolve(tags);
     });
   }
   buildTemplateTagsQuery(value) {
-    return 'http://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=' + 
+    return 'http://dbpedia.org/sparql?default-graph-uri=http://dbpedia.org&query=' +
             encodeURIComponent('SELECT * \
             WHERE { \
                ?resource a owl:Class. \
@@ -149,7 +154,7 @@ class BrowserUiManager {
 
 
   enableElementSelection(data) {
-    
+
     var me = this;
     this.executeOnCurrentTab(function(tab){
       me.templatesCreator.enableElementSelection(tab, data);
@@ -157,7 +162,7 @@ class BrowserUiManager {
   };
 
   disableElementSelection(data) {
-    
+
     var me = this;
     this.executeOnCurrentTab(function(tab){
       me.templatesCreator.disableElementSelection(tab, data.selector);
@@ -180,7 +185,7 @@ class BrowserUiManager {
 
   setContextualizedElement(extractedData) {
 
-      this.templatesCreator.setContextualizedElement(extractedData); 
+      this.templatesCreator.setContextualizedElement(extractedData);
   };
 
   executeOnCurrentTab(callback) {

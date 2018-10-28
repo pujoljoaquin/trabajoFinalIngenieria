@@ -36,6 +36,7 @@ serviceCreator.service("ServiceService", [
     this.services;
     this.currentServiceKey;
     this.buildingStrategy;
+    this.currentXPath = "";
     this.storage = new LocalStorage();
 
     this.initialize = function() {
@@ -359,6 +360,25 @@ serviceCreator.service("ServiceService", [
             return;
         });
     };
+
+    this.setCurrentXPath = function(xpath) {
+        this.currentXPath = xpath;
+    }
+
+    this.getCurrentXPath = function() {
+        return this.currentXPath;
+    }
+
+    this.pruebaPau = function(message, xpath) {
+
+        console.log("Service de pruebaPau()");
+        console.log(xpath);
+        var auxMessage = {message: message, showXPath: xpath}
+        browser.runtime.sendMessage({
+            msg: auxMessage,
+            action: 'ShowProductComments'
+        });
+    }
 
     this.saveObject = function(objInstanciado) {
         //var deferred = $q.defer();
