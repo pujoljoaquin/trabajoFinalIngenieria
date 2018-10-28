@@ -369,10 +369,7 @@ serviceCreator.service("ServiceService", [
         return this.currentXPath;
     }
 
-    this.pruebaPau = function(message, xpath) {
-
-        console.log("Service de pruebaPau()");
-        console.log(xpath);
+    this.getProductMessage = function(message, xpath) {
         var auxMessage = {message: message, showXPath: xpath}
         browser.runtime.sendMessage({
             msg: auxMessage,
@@ -423,14 +420,40 @@ serviceCreator.service("ServiceService", [
 
     this.sendCurrentObjectsForProduct = function() { // ExistingServiceEdition || NewServiceEdition
         var deferred = $q.defer();
-        angular.forEach($service.products[this.currentProduct].createdObjects, function(value, key) {
-            console.log(key);
-            console.log(value);
+        var className = $service.products[this.currentProduct].class;
+        var method = 'insertOneIn' + className;
+        var ejResponse = {'status': 'ok', 'comment': 'Prueba'};
+        console.log(method);
+        console.log($service.products[this.currentProduct].createdObjects[0]);
+        browser.runtime.sendMessage({
+            method: 'POST',
+            action: 'xhttp',
+            url: 'http://localhost:3000/render/' + method,
+            headers: {'ContentType': 'application/json'},
+            data: $service.products[this.currentProduct].createdObjects[0]
+        }).then(response => {
+            console.log(response);
+            ejResponse = response;
         });
         return this.asDeferred(function() {
-            //$service.services[$service.currentServiceKey].properties = properties;
-            return;
+            return ejResponse;
         });
+        //angular.forEach($service.products[this.currentProduct].createdObjects, function(value, key) {
+        //    console.log(className);
+        //    console.log(value);
+        //    browser.runtime.sendMessage({
+        //        method: 'POST',
+        //        action: 'xhttp',
+        //        url: 'http://localhost:3000/' + method,
+        //        headers: {'ContentType': 'application/json'},
+        //        data: value
+        //    }).then((response => {
+        //        console.log(response);
+        //    });
+        //});
+        //return this.asDeferred(function() {
+            //return;
+        //});
     };
 
     this.initialize();

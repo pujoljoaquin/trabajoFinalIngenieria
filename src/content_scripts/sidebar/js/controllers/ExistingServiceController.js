@@ -170,9 +170,10 @@ serviceCreator.controller('ExistingServiceController', function($scope, $state, 
       const control = this;
       ServiceService.setCurrentProduct(control.parentElement.getAttribute("productId"));
       console.log(ServiceService.getCurrentProduct());
-      ServiceService.sendCurrentObjectsForProduct().then(function() {
+      ServiceService.sendCurrentObjectsForProduct().then(function(response) {
         console.log("Objetos instanciados enviado");
-        ServiceService.pruebaPau("PRUEBA FINAL!!!", ServiceService.getCurrentProduct().xpath);
+        console.log(response);
+        ServiceService.getProductMessage("PRUEBA FINAL!!!", ServiceService.getCurrentProduct().xpath);
       });
       //var images = document.getElementsByTagName('img');
       //for (var i = 0, l = images.length; i < l; i++) {
