@@ -12,7 +12,9 @@ class Sidebar {
         console.log(message);
         var elem = (new XPathInterpreter()).getSingleElementByXpath(message.xpath, document);
         console.log(elem);
-        elem.append(message.msg);
+        var iframe = document.createElement("iframe");
+        iframe.src ="https://www.google.com";
+        elem.append(iframe);
         //document.getElementsByClassName("informatica-compra-al-mejor-precio-en-fravega-com").append(message);
     }
 
